@@ -78,7 +78,6 @@ class EncoderDecoderConfig(PretrainedConfig):
         assert (
             "encoder" in kwargs and "decoder" in kwargs
         ), "Config has to be initialized with encoder and decoder config"
-
         encoder_config = kwargs.pop("encoder")
         encoder_model_type = encoder_config.pop("model_type")
         decoder_config = kwargs.pop("decoder")
