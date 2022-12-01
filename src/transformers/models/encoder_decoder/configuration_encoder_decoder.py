@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import copy
-
 from ...configuration_utils import PretrainedConfig
 from ...utils import logging
 
@@ -73,10 +72,13 @@ class EncoderDecoderConfig(PretrainedConfig):
     is_composition = True
 
     def __init__(self, **kwargs):
+        if 'config' in kwargs.keys():
+            kwargs.pop('config')
         super().__init__(**kwargs)
         assert (
             "encoder" in kwargs and "decoder" in kwargs
         ), "Config has to be initialized with encoder and decoder config"
+
         encoder_config = kwargs.pop("encoder")
         encoder_model_type = encoder_config.pop("model_type")
         decoder_config = kwargs.pop("decoder")
