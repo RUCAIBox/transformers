@@ -73,6 +73,8 @@ class EncoderDecoderConfig(PretrainedConfig):
     is_composition = True
 
     def __init__(self, **kwargs):
+        if 'config' in kwargs.keys():
+            kwargs.pop('config')
         super().__init__(**kwargs)
         assert (
             "encoder" in kwargs and "decoder" in kwargs
