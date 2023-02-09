@@ -14,8 +14,8 @@ from transformers.configuration_utils import PretrainedConfig
 logger = logging.getLogger(__name__)
 
 UNILM_PRETRAINED_CONFIG_ARCHIVE_MAP = {
-    'unilm-large-cased': "https://huggingface.co/microsoft/unilm-large-cased/raw/main/config.json",
-    'unilm-base-cased': "https://huggingface.co/microsoft/unilm-base-cased/raw/main/config.json"
+    'microsoft/unilm-large-cased': "https://huggingface.co/microsoft/unilm-large-cased/raw/main/config.json",
+    'microsoft/unilm-base-cased': "https://huggingface.co/microsoft/unilm-base-cased/raw/main/config.json"
 }
 
 

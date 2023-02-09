@@ -20,10 +20,10 @@ from transformers.models.bert.modeling_bert import load_tf_weights_in_bert, Bert
 
 logger = logging.getLogger(__name__)
 
-UNILM_PRETRAINED_MODEL_ARCHIVE_MAP = {
-    'unilm-base-cased': "",
-    'unilm-large-cased': ""
-}
+UNILM_PRETRAINED_MODEL_ARCHIVE_LIST = [
+    'microsoft/unilm-base-cased',
+    'microsoft/unilm-large-cased'
+]
 
 BertLayerNorm = torch.nn.LayerNorm
 
@@ -149,7 +149,7 @@ class BertEncoder(nn.Module):
 
 class UnilmPreTrainedModel(PreTrainedModel):
     config_class = UnilmConfig
-    pretrained_model_archive_map = UNILM_PRETRAINED_MODEL_ARCHIVE_MAP
+    pretrained_model_archive_map = UNILM_PRETRAINED_MODEL_ARCHIVE_LIST
     load_tf_weights = load_tf_weights_in_bert
     base_model_prefix = "unilm"
 
@@ -250,11 +250,11 @@ class LabelSmoothingLoss(_Loss):
         return F.kl_div(output, model_prob.type_as(output), reduction='none').view(batch_size, num_pos, -1).sum(2)
 
 
-class UnilmForSeq2Seq(UnilmPreTrainedModel):
+class UnilmForConditionalGeneration(UnilmPreTrainedModel):
     def __init__(self, config,
                  search_beam_size=5, length_penalty=0.,
                  forbid_duplicate_ngrams=False, forbid_ignore_set=None, ngram_size=3, min_len=0):
-        super(UnilmForSeq2Seq, self).__init__(config)
+        super(UnilmForConditionalGeneration, self).__init__(config)
         self.bert = UnilmModel(config)
         self.cls = BertOnlyMLMHead(config)
         self.crit_mask_lm = nn.CrossEntropyLoss(reduction='none')

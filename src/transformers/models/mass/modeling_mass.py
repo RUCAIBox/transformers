@@ -44,8 +44,8 @@ _TOKENIZER_FOR_DOC = "MassTokenizer"
 _EXPECTED_OUTPUT_SHAPE = [1, 8, 768]
 
 MASS_PRETRAINED_MODEL_ARCHIVE_LIST = [
-    "mass-base-uncased",
-    "mass-middle-uncased",
+    "RUCAIBox/mass-base-uncased",
+    "RUCAIBox/mass-middle-uncased",
 ]
 
 

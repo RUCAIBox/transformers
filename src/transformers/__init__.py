@@ -200,6 +200,7 @@ _import_structure = {
     "models.convbert": ["CONVBERT_PRETRAINED_CONFIG_ARCHIVE_MAP", "ConvBertConfig", "ConvBertTokenizer"],
     "models.convnext": ["CONVNEXT_PRETRAINED_CONFIG_ARCHIVE_MAP", "ConvNextConfig"],
     "models.cpm": [],
+    "models.cpt": ["CPTConfig"],
     "models.ctrl": ["CTRL_PRETRAINED_CONFIG_ARCHIVE_MAP", "CTRLConfig", "CTRLTokenizer"],
     "models.cvt": ["CVT_PRETRAINED_CONFIG_ARCHIVE_MAP", "CvtConfig"],
     "models.data2vec": [
@@ -306,6 +307,7 @@ _import_structure = {
         "MarkupLMTokenizer",
     ],
     "models.maskformer": ["MASKFORMER_PRETRAINED_CONFIG_ARCHIVE_MAP", "MaskFormerConfig", "MaskFormerSwinConfig"],
+    "models.mass": ["MassConfig", "MassTokenizer"],
     "models.mbart": ["MBartConfig"],
     "models.mbart50": [],
     "models.mctct": ["MCTCT_PRETRAINED_CONFIG_ARCHIVE_MAP", "MCTCTConfig", "MCTCTProcessor"],
@@ -397,6 +399,7 @@ _import_structure = {
         "TrOCRConfig",
         "TrOCRProcessor",
     ],
+    "models.unilm": ["UnilmConfig", "UnilmTokenizer"],
     "models.unispeech": [
         "UNISPEECH_PRETRAINED_CONFIG_ARCHIVE_MAP",
         "UniSpeechConfig",
@@ -1185,6 +1188,14 @@ else:
             "ConvNextPreTrainedModel",
         ]
     )
+    _import_structure["models.cpt"].extend(
+        [
+            "CPT_PRETRAINED_MODEL_ARCHIVE_LIST",
+            "CPTForConditionalGeneration",
+            "CPTModel",
+            "CPTPreTrainedModel",
+        ]
+    )
     _import_structure["models.ctrl"].extend(
         [
             "CTRL_PRETRAINED_MODEL_ARCHIVE_LIST",
@@ -1659,6 +1670,14 @@ else:
             "MaskFormerModel",
             "MaskFormerPreTrainedModel",
             "MaskFormerSwinBackbone",
+        ]
+    )
+    _import_structure["models.mass"].extend(
+        [
+            "MASS_PRETRAINED_MODEL_ARCHIVE_LIST",
+            "MassForConditionalGeneration",
+            "MassModel",
+            "MassPreTrainedModel",
         ]
     )
     _import_structure["models.mbart"].extend(
@@ -2157,6 +2176,14 @@ else:
     )
     _import_structure["models.trocr"].extend(
         ["TROCR_PRETRAINED_MODEL_ARCHIVE_LIST", "TrOCRForCausalLM", "TrOCRPreTrainedModel"]
+    )
+    _import_structure["models.unilm"].extend(
+        [
+            "UNILM_PRETRAINED_MODEL_ARCHIVE_LIST",
+            "UnilmForConditionalGeneration",
+            "UnilmModel",
+            "UnilmPreTrainedModel",
+        ]
     )
     _import_structure["models.unispeech"].extend(
         [
@@ -3464,6 +3491,7 @@ if TYPE_CHECKING:
     from .models.conditional_detr import CONDITIONAL_DETR_PRETRAINED_CONFIG_ARCHIVE_MAP, ConditionalDetrConfig
     from .models.convbert import CONVBERT_PRETRAINED_CONFIG_ARCHIVE_MAP, ConvBertConfig, ConvBertTokenizer
     from .models.convnext import CONVNEXT_PRETRAINED_CONFIG_ARCHIVE_MAP, ConvNextConfig
+    from .models.cpt import CPTConfig
     from .models.ctrl import CTRL_PRETRAINED_CONFIG_ARCHIVE_MAP, CTRLConfig, CTRLTokenizer
     from .models.cvt import CVT_PRETRAINED_CONFIG_ARCHIVE_MAP, CvtConfig
     from .models.data2vec import (
@@ -3568,6 +3596,7 @@ if TYPE_CHECKING:
         MarkupLMTokenizer,
     )
     from .models.maskformer import MASKFORMER_PRETRAINED_CONFIG_ARCHIVE_MAP, MaskFormerConfig, MaskFormerSwinConfig
+    from .models.mass import MassConfig, MassTokenizer
     from .models.mbart import MBartConfig
     from .models.mctct import MCTCT_PRETRAINED_CONFIG_ARCHIVE_MAP, MCTCTConfig, MCTCTProcessor
     from .models.megatron_bert import MEGATRON_BERT_PRETRAINED_CONFIG_ARCHIVE_MAP, MegatronBertConfig
@@ -3645,6 +3674,7 @@ if TYPE_CHECKING:
         TransfoXLTokenizer,
     )
     from .models.trocr import TROCR_PRETRAINED_CONFIG_ARCHIVE_MAP, TrOCRConfig, TrOCRProcessor
+    from .models.unilm import UnilmConfig, UnilmTokenizer
     from .models.unispeech import UNISPEECH_PRETRAINED_CONFIG_ARCHIVE_MAP, UniSpeechConfig
     from .models.unispeech_sat import UNISPEECH_SAT_PRETRAINED_CONFIG_ARCHIVE_MAP, UniSpeechSatConfig
     from .models.van import VAN_PRETRAINED_CONFIG_ARCHIVE_MAP, VanConfig
@@ -4313,6 +4343,12 @@ if TYPE_CHECKING:
             ConvNextModel,
             ConvNextPreTrainedModel,
         )
+        from .models.cpt import (
+            CPT_PRETRAINED_MODEL_ARCHIVE_LIST,
+            CPTForConditionalGeneration,
+            CPTModel,
+            CPTPreTrainedModel,
+        )
         from .models.ctrl import (
             CTRL_PRETRAINED_MODEL_ARCHIVE_LIST,
             CTRLForSequenceClassification,
@@ -4698,6 +4734,12 @@ if TYPE_CHECKING:
             MaskFormerModel,
             MaskFormerPreTrainedModel,
             MaskFormerSwinBackbone,
+        )
+        from .model.mass import (
+            MASS_PRETRAINED_MODEL_ARCHIVE_LIST,
+            MassForConditionalGeneration,
+            MassModel,
+            MassPreTrainedModel,
         )
         from .models.mbart import (
             MBartForCausalLM,
@@ -5100,6 +5142,12 @@ if TYPE_CHECKING:
             load_tf_weights_in_transfo_xl,
         )
         from .models.trocr import TROCR_PRETRAINED_MODEL_ARCHIVE_LIST, TrOCRForCausalLM, TrOCRPreTrainedModel
+        from .model.unilm import (
+            UNILM_PRETRAINED_MODEL_ARCHIVE_LIST,
+            UnilmForConditionalGeneration,
+            UnilmModel,
+            UnilmPreTrainedModel,
+        )
         from .models.unispeech import (
             UNISPEECH_PRETRAINED_MODEL_ARCHIVE_LIST,
             UniSpeechForCTC,

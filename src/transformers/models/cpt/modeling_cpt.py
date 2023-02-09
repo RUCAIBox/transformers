@@ -45,7 +45,7 @@ from transformers.modeling_outputs import (
 )
 from transformers.modeling_utils import PreTrainedModel
 from transformers.utils import logging
-from transformers import BartConfig as CPTConfig
+from .configuration_cpt import CPTConfig
 from transformers import BertModel, BertConfig
 
 from torch.nn import LayerNorm
@@ -58,6 +58,7 @@ _TOKENIZER_FOR_DOC = "CPTTokenizer"
 
 
 CPT_PRETRAINED_MODEL_ARCHIVE_LIST = [
+    "fnlp/cpt-base",
     "fnlp/cpt-large",
 ]
 
@@ -799,6 +800,7 @@ class CPTModel(CPTPretrainedModel):
             intermediate_size=config.encoder_ffn_dim,
             hidden_dropout_prob=config.activation_dropout,
             attention_probs_dropout_prob=config.attention_dropout,
+            max_position_embeddings=config.max_position_embeddings,
         )
         config.vocab_size = encoder_config.vocab_size
         self.encoder = BertModel(encoder_config, add_pooling_layer=False)
@@ -820,7 +822,6 @@ class CPTModel(CPTPretrainedModel):
             def __init__(self, encoder):
                 super().__init__()
                 self.encoder = encoder
-            
             def forward(self, *args, **kwargs):
                 kwargs['output_hidden_states'] = True                
                 return self.encoder(*args, **kwargs)
