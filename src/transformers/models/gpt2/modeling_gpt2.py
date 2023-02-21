@@ -35,7 +35,7 @@ else:
     is_amp_available = False
 
 from ...activations import ACT2FN
-from ...adapter import Adapter, LoRALinear, PrefixTuning
+from ...adapter import Adapter, LoRALinear, PrefixTuning, LoRAMergedLinear
 from ...modeling_outputs import (
     BaseModelOutputWithPastAndCrossAttentions,
     CausalLMOutputWithCrossAttentions,
@@ -164,6 +164,8 @@ class GPT2Attention_origin(nn.Module):
         if self.is_cross_attention:
             self.c_attn = Conv1D(2 * self.embed_dim, self.embed_dim)
             self.q_attn = Conv1D(self.embed_dim, self.embed_dim)
+        if 'lora' in config.efficient_methods:
+            self.c_attn = LoRAMergedLinear(self.embed_dim, self.embed_dim*3, config)
         else:
             self.c_attn = Conv1D(3 * self.embed_dim, self.embed_dim)
         self.c_proj = Conv1D(self.embed_dim, self.embed_dim)
@@ -917,10 +919,10 @@ class GPT2Model_origin(GPT2PreTrainedModel):
                 if 'prefix-tuning' in methods or 'p-tuning-v2' in methods:
                     layer.attn.prefix_tuning.requires_grad_(True)
                 if 'lora' in methods:
-                    pass
-                    for proj in [layer.attn.v_proj, layer.attn.q_proj]:
-                        proj.A.requires_grad_(True)
-                        proj.B.requires_grad_(True)
+                    # pass
+                    for proj in [layer.attn.c_attn]:
+                        proj.lora_A.requires_grad_(True)
+                        proj.lora_B.requires_grad_(True)
 
     def _prune_heads(self, heads_to_prune):
         """
