@@ -919,7 +919,6 @@ class GPT2Model_origin(GPT2PreTrainedModel):
                 if 'prefix-tuning' in methods or 'p-tuning-v2' in methods:
                     layer.attn.prefix_tuning.requires_grad_(True)
                 if 'lora' in methods:
-                    # pass
                     for proj in [layer.attn.c_attn]:
                         proj.lora_A.requires_grad_(True)
                         proj.lora_B.requires_grad_(True)
