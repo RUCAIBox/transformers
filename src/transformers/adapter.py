@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from typing import Tuple
+import math
 
 class PrefixTuning(nn.Module):
     """Layer-wise prefix for encoder or decoder."""
@@ -75,3 +76,50 @@ class Adapter(nn.Module):
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         return input + self.adapter(input)
+    
+class LoRAMergedLinear(nn.Linear):
+
+    def __init__(self, in_features, out_features, config):
+        super().__init__(in_features, out_features)
+        self.r = config.lora_r
+        self.alpha = config.lora_alpha
+        self.scaling = self.alpha / self.r
+        self.enable_lora= [True, False, True]
+        self.lora_A = nn.Parameter(
+            self.weight.new_zeros((config.lora_r * sum(self.enable_lora), in_features)))
+        self.lora_B = nn.Parameter(
+            self.weight.new_zeros((out_features // len(self.enable_lora) * sum(self.enable_lora), config.lora_r))
+        )  
+        self.lora_ind = self.weight.new_zeros(
+            (out_features,), dtype=torch.bool
+        ).view(len(self.enable_lora), -1) 
+        self.lora_ind[self.enable_lora, :] = True
+        self.lora_ind = self.lora_ind.view(-1)
+        self.lora_dropout = nn.Dropout(p=config.lora_dropout)
+        self.lora_reset_parameters()
+        self.weight.requires_grad = False 
+        self.weight.data = self.weight.data.T
+
+    def lora_reset_parameters(self):
+        nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_B)
+
+    def zero_pad(self, x): 
+        result = x.new_zeros((*x.shape[:-1], self.out_features)) 
+        result = result.view(-1, self.out_features)
+        result[:, self.lora_ind] = x.reshape(
+            -1, self.out_features // len(self.enable_lora) * sum(self.enable_lora)
+        )
+        return result.view((*x.shape[:-1], self.out_features))
+
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
+        
+        result = F.linear(input, self.weight.T, bias=self.bias)
+        after_A = F.linear(self.lora_dropout(input), self.lora_A) 
+        after_B = F.conv1d( 
+            after_A.transpose(-2, -1), 
+            self.lora_B.unsqueeze(-1), 
+            groups=sum(self.enable_lora) 
+        ).transpose(-2, -1)
+        result += self.zero_pad(after_B) * self.scaling
+        return result            
