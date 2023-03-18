@@ -337,7 +337,7 @@ class T5LayerFF(nn.Module):
         return hidden_states
 
 
-class T5Attention_origin(nn.Module):
+class T5Attention(nn.Module):
     def __init__(self, config: T5Config, has_relative_attention_bias=False):
         super().__init__()
         self.is_decoder = config.is_decoder
@@ -576,7 +576,7 @@ class T5Attention_origin(nn.Module):
         return outputs
 
 
-class T5Attention(T5Attention_origin):
+class T5Attention_fast(nn.Module):
     """Optimized T5Attention for self-attn and encoder-decoder-attn in T5."""
 
     def __init__(self,
